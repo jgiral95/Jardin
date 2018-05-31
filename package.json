@@ -1,0 +1,21 @@
+{
+  "name": "jardin_automatico",
+  "version": "1.0.0",
+  "description": "# Steps 1. load serial-sketch to arduino   - you can see serial: `cat /dev/ttyACM0`",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "juan giraldo",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2",
+    "request": "^2.87.0",
+    "serialport": "^6.0.4",
+    "socket.io": "^2.0.4",
+    "superagent": "^3.8.3"
+  },
+  "devDependencies": {}
+}
