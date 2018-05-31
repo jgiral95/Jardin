@@ -1,31 +1,40 @@
 <html>
 <title>Jardin</title>
 <style>
-  a:link {
-      color: green;
-      background-color: transparent;
-      text-decoration: none;
-  }
+.btncls{
+  background-color: #1C36F1;
+  border: #2e6da4;
+  font-family: Arial, Geneva, Arial, Helvetica,  sans-serif;
+  font-size: 15px;
+  color: #fff;
+  letter-spacing: 1px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: normal;
 
-  a:visited {
-      color: black;
-      background-color: transparent;
-      text-decoration: none;
-  }
+  border-radius: 4px;
+  line-height: 1.5;
+  text-decoration:none;
+}
+.btncls:hover{
+  background-color:#2A9BEE;
+  border: #2e6da4;
+  font-family: Arial, Geneva, Arial, Helvetica,  sans-serif;
+font-size: 15px;
+  color: #000;
+  letter-spacing: 1px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: normal;
 
-  a:hover {
-      color: blue;
-      background-color: transparent;
-      text-decoration: none;
-  }
-
-  a:active {
-      color: black;
-      background-color: transparent;
-      text-decoration: none;
-  }
+  border-radius: 4px;
+  line-height: 1.5;
+  text-decoration:none;
+}
 </style>
   <p>Proyecto Jardin Automatico</p>
   <p>Opciones:</p>
-  <a href="graf">Graficos tiempo real</a>
+  <form action="/graf">
+    <button class="btncls">Graficos en tiempo real</button>
+  </form>
 </html>

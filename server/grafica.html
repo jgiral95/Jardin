@@ -1,31 +1,42 @@
 <html>
-<style>
-a:link {
-  color: green;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-a:visited {
-  color: black;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-a:hover {
-  color: blue;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-a:active {
-  color: black;
-  background-color: transparent;
-  text-decoration: none;
-}
-</style>
 <head>
   <title>Graficas sensores</title>
+  <link rel="icon"
+  href="favicon.ico"/>
+
+  <h1 style="color: #16B247;">Lectura de sensores</h1>
+  <style>
+  .btncls{
+    background-color: #1C36F1;
+    border: #2e6da4;
+    font-family: Arial, Geneva, Arial, Helvetica,  sans-serif;
+    font-size: 15px;
+    color: #fff;
+    letter-spacing: 1px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: normal;
+
+    border-radius: 4px;
+    line-height: 1.5;
+    text-decoration:none;
+  }
+  .btncls:hover{
+    background-color:#2A9BEE;
+    border: #2e6da4;
+    font-family: Arial, Geneva, Arial, Helvetica,  sans-serif;
+    font-size: 15px;
+    color: #000;
+    letter-spacing: 1px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: normal;
+
+    border-radius: 4px;
+    line-height: 1.5;
+    text-decoration:none;
+  }
+</style>
 
 </head>
 
@@ -59,6 +70,13 @@ a:active {
       .attr("height", height)
       .append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+      svg.append("text")
+      .attr("transform", "translate(100,0)")
+      .attr("x", -120)
+      .attr("y", -170)
+      .attr("font-size", "20px")
+      .attr("class", "title")
+      .text("Luz")
       // Append background arc to svg
       var background = svg.append("path")
       .datum({endAngle: 90 * (pi/180)})
@@ -153,6 +171,13 @@ a:active {
       .attr("height", height)
       .append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+      svg2.append("text")
+      .attr("transform", "translate(100,0)")
+      .attr("x", -145)
+      .attr("y", -170)
+      .attr("font-size", "20px")
+      .attr("class", "title")
+      .text("Humedad")
       // Append background arc to svg
       var background2 = svg2.append("path")
       .datum({endAngle: 90 * (pi/180)})
@@ -248,6 +273,13 @@ a:active {
       .attr("height", height)
       .append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+      svg3.append("text")
+      .attr("transform", "translate(100,0)")
+      .attr("x", -160)
+      .attr("y", -170)
+      .attr("font-size", "20px")
+      .attr("class", "title")
+      .text("Temperatura")
       // Append background arc to svg
       var background3 = svg3.append("path")
       .datum({endAngle: 90 * (pi/180)})
@@ -318,7 +350,21 @@ a:active {
       </script>
     </div>
   </div>
+  <div class="column">
+    <div class="container">
+      <form action="/graf">
+        <button class="btncls">Actualizar</button>
+      </form>
+
+    </div>
+
+    <div class="column">
+      <form action="/">
+        <button class="btncls">Regresar</button>
+      </form>
+    </div>
+  </div>
+
 </body>
-<a href="/graf">Actualizar</a>
-<a href="/">Regresar</a>
+
 </html>
