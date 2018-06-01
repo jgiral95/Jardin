@@ -9,19 +9,9 @@ const io = SocketIo.listen(server);
 const request = require('request');
 
 // Rutas existentes
-
 app.get('/', (req, res) => {
   res.sendFile(__dirname +'/index.html');
 });
-
-app.get('/icon', (req, res) => {
-  res.sendFile(__dirname +'/favicon.png');
-});
-
-app.get('/graf2', (req, res) => {
-  res.sendFile(__dirname +'/grafica2.html');
-});
-
 
 app.get('/graf', (req, res) => {
   res.sendFile(__dirname +'/grafica.html');
@@ -38,12 +28,12 @@ app.get('/graf', (req, res) => {
       console.log("GET Luz fallido")
     }
 
-    if(body==null){
-    }
-    else{
+    if(body){
       io.emit('Luz:data', {
         value: body.out.toString()
       });
+    }
+    else{
     };
   });
 
@@ -58,12 +48,12 @@ app.get('/graf', (req, res) => {
     if (error){
       console.log("GET Humedad fallido")
     }
-    if(body==null){
-    }
-    else{
+    if(body){
       io.emit('Humedad:data', {
         value: body.out.toString()
       });
+    }
+    else{
     };
   });
 
@@ -78,12 +68,13 @@ app.get('/graf', (req, res) => {
     if (error){
       console.log("GET Temperatura fallido")
     }
-    if(body==null){
-    }
-    else{
+    if(body){
       io.emit('Temperatura:data', {
         value: body.out.toString()
       });
+    }
+    else{
+
     };
   });
 });
