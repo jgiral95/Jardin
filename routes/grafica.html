@@ -1,0 +1,373 @@
+<html>
+<head>
+  <title>Sensores</title>
+  <link rel="icon"
+  type="image/x-icon"
+      href="http://www.iconarchive.com/download/i88800/icons8/ios7/Plants-Hand-Planting.ico" />
+  <link rel="icon"
+  href="favicon.ico"/>
+
+  <h1 style="color: #16B247;">Lectura de sensores</h1>
+  <style>
+  .btncls{
+    background-color: #1C36F1;
+    border: #2e6da4;
+    font-family: Arial, Geneva, Arial, Helvetica,  sans-serif;
+    font-size: 15px;
+    color: #fff;
+    letter-spacing: 1px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: normal;
+
+    border-radius: 4px;
+    line-height: 1.5;
+    text-decoration:none;
+  }
+  .btncls:hover{
+    background-color:#2A9BEE;
+    border: #2e6da4;
+    font-family: Arial, Geneva, Arial, Helvetica,  sans-serif;
+    font-size: 15px;
+    color: #000;
+    letter-spacing: 1px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: normal;
+
+    border-radius: 4px;
+    line-height: 1.5;
+    text-decoration:none;
+  }
+</style>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+</head>
+
+<body>
+  <canvas id="Luz"></canvas>
+  <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+  <div class="row">
+    <div class="column">
+      <script>
+      var num = 0;
+      var numh = 0;
+      var numt = 0;
+      // Set Up
+      const socket = io();
+      var pi = Math.PI,
+      width = 500,
+      height = 380;
+      var iR = 100;
+      var oR = 160;
+      var cur_color = 'limegreen';
+      var new_color, hold;
+      var max = 1023,
+      min = 0,
+      current = 0;
+      // Arc Defaults
+      var arc = d3.svg.arc()
+      .innerRadius(iR)
+      .outerRadius(oR)
+      .startAngle(-90 * (pi/180))
+      // Place svg element
+      var svg = d3.select("body").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+      svg.append("text")
+      .attr("transform", "translate(100,0)")
+      .attr("x", -120)
+      .attr("y", -170)
+      .attr("font-size", "20px")
+      .attr("class", "title")
+      .text("Luz")
+      // Append background arc to svg
+      var background = svg.append("path")
+      .datum({endAngle: 90 * (pi/180)})
+      .style("fill", "#ddd")
+      .attr("d", arc);
+      // Append foreground arc to svg
+      var foreground = svg.append("path")
+      .datum({endAngle: -90 * (pi/180)})
+      .style("fill", cur_color)
+      .attr("d", arc);
+      // Display Max value
+      var max = svg.append("text")
+      .attr("transform", "translate("+ (iR + ((oR - iR)/2)) +",15)") // Set between inner and outer Radius
+      .attr("text-anchor", "middle")
+      .style("font-family", "Helvetica")
+      .text(max)
+      // Display Min value
+      var min = svg.append("text")
+      .attr("transform", "translate("+ -(iR + ((oR - iR)/2)) +",15)") // Set between inner and outer Radius
+      .attr("text-anchor", "middle")
+      .style("font-family", "Helvetica")
+      .text(min)
+      // Display Current value
+      var current = svg.append("text")
+      .attr("text-anchor", "middle")
+      .style("font-size", "50")
+      .style("font-family", "Helvetica")
+      .text(current)
+      // Update every x seconds
+      setInterval(function() {
+        // Get value
+        socket.on('Luz:data', function (dato) {
+          num = dato.value;
+        });
+        var num2 = num*(180/1023);
+        var numPi = Math.floor(num2 - 89) * (pi/180);
+        // Get new color
+        if(num >= (1023*(2/3))) {
+          new_color = 'red';
+        } else if(num >= (1023/3)) {
+          new_color = 'orange';
+        } else {
+          new_color = 'limegreen';
+        }
+        // Text transition
+        current.transition()
+        .text(Math.floor(num));
+        // Arc Transition
+        foreground.transition()
+        .duration(750)
+        .styleTween("fill", function() { return d3.interpolate(new_color, cur_color); })
+        .call(arcTween, numPi);
+        // Set colors for next transition
+        hold = cur_color; cur_color = new_color; new_color = hold;
+      }, 2000); // Repeat every 1.5s
+      // Update animation
+      function arcTween(transition, newAngle) {
+        transition.attrTween("d", function(d) {
+          var interpolate = d3.interpolate(d.endAngle, newAngle);
+          return function(t) {
+            d.endAngle = interpolate(t);
+            return arc(d);
+          };
+        });
+      }
+
+      </script>
+    </div>
+    <div class="column">
+      <script>
+      // Set Up
+      const socket2 = io();
+      var pi = Math.PI,
+      width = 500,
+      height = 380;
+      var iR = 100;
+      var oR = 160;
+      var cur_colorh = 'limegreen';
+      var new_color, hold;
+      var max2 = 1023,
+      min2 = 0,
+      current2 = 0;
+      // Arc Defaults
+      var arc2 = d3.svg.arc()
+      .innerRadius(iR)
+      .outerRadius(oR)
+      .startAngle(-90 * (pi/180))
+      // Place svg element
+      var svg2 = d3.select("body").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+      svg2.append("text")
+      .attr("transform", "translate(100,0)")
+      .attr("x", -145)
+      .attr("y", -170)
+      .attr("font-size", "20px")
+      .attr("class", "title")
+      .text("Humedad")
+      // Append background arc to svg
+      var background2 = svg2.append("path")
+      .datum({endAngle: 90 * (pi/180)})
+      .style("fill", "#ddd")
+      .attr("d", arc2);
+      // Append foreground arc to svg
+      var foreground2 = svg2.append("path")
+      .datum({endAngle: -90 * (pi/180)})
+      .style("fill", cur_colorh)
+      .attr("d", arc2);
+      // Display Max value
+      var max2 = svg2.append("text")
+      .attr("transform", "translate("+ (iR + ((oR - iR)/2)) +",15)") // Set between inner and outer Radius
+      .attr("text-anchor", "middle")
+      .style("font-family", "Helvetica")
+      .text(max2)
+      // Display Min value
+      var min2 = svg2.append("text")
+      .attr("transform", "translate("+ -(iR + ((oR - iR)/2)) +",15)") // Set between inner and outer Radius
+      .attr("text-anchor", "middle")
+      .style("font-family", "Helvetica")
+      .text(min2)
+      // Display Current value
+      var current2 = svg2.append("text")
+      .attr("text-anchor", "middle")
+      .style("font-size", "50")
+      .style("font-family", "Helvetica")
+      .text(current2)
+      // Update every x seconds
+      setInterval(function() {
+        // Get value
+        socket2.on('Humedad:data', function (dato) {
+          numh = dato.value;
+        });
+        var numh2 = numh*(180/1023);
+        var numPi = Math.floor(numh2 - 89) * (pi/180);
+        // Get new color
+        if(numh >= (1023*(2/3))) {
+          new_colorh = 'red';
+        } else if(numh >= (1023/3)) {
+          new_colorh = 'orange';
+        } else {
+          new_colorh = 'limegreen';
+        }
+        // Text transition
+        current2.transition()
+        .text(Math.floor(numh));
+        // Arc Transition
+        foreground2.transition()
+        .duration(750)
+        .styleTween("fill", function() { return d3.interpolate(new_colorh, cur_colorh); })
+        .call(arcTween, numPi);
+        // Set colors for next transition
+        hold = cur_colorh; cur_colorh = new_colorh; new_colorh = hold;
+      }, 2000); // Repeat every 1.5s
+      // Update animation
+      function arcTween(transition2, newAngle2) {
+        transition2.attrTween("d", function(d2) {
+          var interpolate2 = d3.interpolate(d2.endAngle, newAngle2);
+          return function(t) {
+            d2.endAngle = interpolate2(t);
+            return arc2(d2);
+          };
+        });
+      }
+
+      </script>
+    </div>
+
+    <div class="column">
+      <script>
+      // Set Up
+      const socket3 = io();
+      var pi = Math.PI,
+      width = 500,
+      height = 380;
+      var iR = 100;
+      var oR = 160;
+      var cur_colort = 'limegreen';
+      var new_color, hold;
+      var max3 = 1023,
+      min3 = 0,
+      current3 = 0;
+      // Arc Defaults
+      var arc3 = d3.svg.arc()
+      .innerRadius(iR)
+      .outerRadius(oR)
+      .startAngle(-90 * (pi/180))
+      // Place svg element
+      var svg3 = d3.select("body").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+      svg3.append("text")
+      .attr("transform", "translate(100,0)")
+      .attr("x", -160)
+      .attr("y", -170)
+      .attr("font-size", "20px")
+      .attr("class", "title")
+      .text("Temperatura")
+      // Append background arc to svg
+      var background3 = svg3.append("path")
+      .datum({endAngle: 90 * (pi/180)})
+      .style("fill", "#ddd")
+      .attr("d", arc3);
+      // Append foreground arc to svg
+      var foreground3 = svg3.append("path")
+      .datum({endAngle: -90 * (pi/180)})
+      .style("fill", cur_colort)
+      .attr("d", arc3);
+      // Display Max value
+      var max3 = svg3.append("text")
+      .attr("transform", "translate("+ (iR + ((oR - iR)/2)) +",15)") // Set between inner and outer Radius
+      .attr("text-anchor", "middle")
+      .style("font-family", "Helvetica")
+      .text(max3)
+      // Display Min value
+      var min3 = svg3.append("text")
+      .attr("transform", "translate("+ -(iR + ((oR - iR)/2)) +",15)") // Set between inner and outer Radius
+      .attr("text-anchor", "middle")
+      .style("font-family", "Helvetica")
+      .text(min3)
+      // Display Current value
+      var current3 = svg3.append("text")
+      .attr("text-anchor", "middle")
+      .style("font-size", "50")
+      .style("font-family", "Helvetica")
+      .text(current3)
+      // Update every x seconds
+      setInterval(function() {
+        // Get value
+        socket3.on('Temperatura:data', function (dato) {
+          numt = dato.value;
+        });
+        var numt2 = numt*(180/1023);
+        var numPi = Math.floor(numt2 - 89) * (pi/180);
+        // Get new color
+        if(numt >= (1023*(2/3))) {
+          new_colort = 'red';
+        } else if(numt >= (1023/3)) {
+          new_colort= 'orange';
+        } else {
+          new_colort = 'limegreen';
+        }
+        // Text transition
+        current3.transition()
+        .text(Math.floor(numt));
+        // Arc Transition
+        foreground3.transition()
+        .duration(750)
+        .styleTween("fill", function() { return d3.interpolate(new_colort, cur_colort); })
+        .call(arcTween, numPi);
+        // Set colors for next transition
+        hold = cur_colort; cur_colort = new_colort; new_colort = hold;
+      }, 2000); // Repeat every 1.5s
+      // Update animation
+      function arcTween(transition3, newAngle3) {
+        transition3.attrTween("d", function(d4) {
+          var interpolate3 = d3.interpolate(d4.endAngle, newAngle3);
+          return function(t) {
+            d4.endAngle = interpolate3(t);
+            return arc3(d4);
+          };
+        });
+      }
+
+      </script>
+    </div>
+  </div>
+  <div class="column">
+    <div class="container">
+      <form action="/graf">
+        <button class="btncls">Actualizar</button>
+      </form>
+
+    </div>
+
+    <div class="column">
+      <form action="/">
+        <button class="btncls">Regresar</button>
+      </form>
+    </div>
+  </div>
+
+</body>
+
+</html>

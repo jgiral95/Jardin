@@ -1,3 +1,2 @@
-#Automatic garden sensor monitoring with node js and Thinger.io
+#Automatic garden sensor monitoring using node js and Thinger.io
 
-#
